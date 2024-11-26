@@ -2,7 +2,7 @@
 <eksamid>
 	<eksam email="jordanna.sherbrook@example.com">
 		<id>1</id>
-		<eksamiaeg>8/25/2025</eksamiaeg>
+		<eksamiaeg>2025-08-25 14:30</eksamiaeg>
 		<koht>30087 Garrison Street</koht>
 		<nimi>
 			<eksamineerijanimi>Jordanna Sherbrook</eksamineerijanimi>
@@ -12,7 +12,7 @@
 	</eksam>
 	<eksam email="elli.harwood@example.com">
 		<id>2</id>
-		<eksamiaeg>7/25/2025</eksamiaeg>
+		<eksamiaeg>2025-07-25 09:15</eksamiaeg>
 		<koht>35451 Schurz Trail</koht>
 		<nimi>
 			<eksamineerijanimi>Elli Harwood</eksamineerijanimi>
@@ -22,7 +22,7 @@
 	</eksam>
 	<eksam email="julietta.duffett@example.com">
 		<id>3</id>
-		<eksamiaeg>5/4/2025</eksamiaeg>
+		<eksamiaeg>2025-05-04 10:45</eksamiaeg>
 		<koht>43665 Fairfield Circle</koht>
 		<nimi>
 			<eksamineerijanimi>Julietta Duffett</eksamineerijanimi>
@@ -32,7 +32,7 @@
 	</eksam>
 	<eksam email="hewett.canty@example.com">
 		<id>4</id>
-		<eksamiaeg>5/14/2025</eksamiaeg>
+		<eksamiaeg>2025-05-14 12:00</eksamiaeg>
 		<koht>4 Bashford Avenue</koht>
 		<nimi>
 			<eksamineerijanimi>Hewett Canty</eksamineerijanimi>
@@ -42,7 +42,7 @@
 	</eksam>
 	<eksam email="pietra.clew@example.com">
 		<id>5</id>
-		<eksamiaeg>1/14/2025</eksamiaeg>
+		<eksamiaeg>2025-01-14 08:00</eksamiaeg>
 		<koht>7 Jackson Way</koht>
 		<nimi>
 			<eksamineerijanimi>Pietra Clew</eksamineerijanimi>
@@ -52,7 +52,7 @@
 	</eksam>
 	<eksam email="xenos.kilbourne@example.com">
 		<id>6</id>
-		<eksamiaeg>9/15/2025</eksamiaeg>
+		<eksamiaeg>2025-09-15 11:30</eksamiaeg>
 		<koht>77257 Meadow Valley Parkway</koht>
 		<nimi>
 			<eksamineerijanimi>Xenos Kilbourne</eksamineerijanimi>
@@ -62,7 +62,7 @@
 	</eksam>
 	<eksam email="connie.sutherden@example.com">
 		<id>7</id>
-		<eksamiaeg>1/21/2025</eksamiaeg>
+		<eksamiaeg>2025-01-21 07:45</eksamiaeg>
 		<koht>50389 Kim Center</koht>
 		<nimi>
 			<eksamineerijanimi>Connie Sutherden</eksamineerijanimi>
@@ -72,7 +72,7 @@
 	</eksam>
 	<eksam email="tiffi.cherrison@example.com">
 		<id>8</id>
-		<eksamiaeg>8/19/2025</eksamiaeg>
+		<eksamiaeg>2025-08-19 13:00</eksamiaeg>
 		<koht>2281 Clarendon Trail</koht>
 		<nimi>
 			<eksamineerijanimi>Tiffi Cherrison</eksamineerijanimi>
@@ -82,7 +82,7 @@
 	</eksam>
 	<eksam email="davon.gronaver@example.com">
 		<id>9</id>
-		<eksamiaeg>5/31/2025</eksamiaeg>
+		<eksamiaeg>2025-05-31 16:00</eksamiaeg>
 		<koht>820 Sunnyside Court</koht>
 		<nimi>
 			<eksamineerijanimi>Davon Gronaver</eksamineerijanimi>
@@ -92,7 +92,7 @@
 	</eksam>
 	<eksam email="florida.sibson@example.com">
 		<id>10</id>
-		<eksamiaeg>5/28/2025</eksamiaeg>
+		<eksamiaeg>2025-05-28 14:00</eksamiaeg>
 		<koht>4067 Briar Crest Junction</koht>
 		<nimi>
 			<eksamineerijanimi>Florida Sibson</eksamineerijanimi>
