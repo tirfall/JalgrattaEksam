@@ -15,9 +15,13 @@ $filteredXml = new DOMDocument;
 $filteredXml->appendChild($filteredXml->createElement('eksamid'));
 
 foreach ($xml->getElementsByTagName('eksam') as $eksam) {
-    $examinerName = $eksam->getElementsByTagName('eksamineerijanimi')->item(0)->nodeValue;
-    $studentName = $eksam->getElementsByTagName('opilanenimi')->item(0)->nodeValue;
-    $examDate = $eksam->getElementsByTagName('eksamiaeg')->item(0)->nodeValue;
+    $examinerNode = $eksam->getElementsByTagName('eksamineerijanimi')->item(0);
+    $studentNode = $eksam->getElementsByTagName('opilanenimi')->item(0);
+    $dateNode = $eksam->getElementsByTagName('eksamiaeg')->item(0);
+
+    $examinerName = $examinerNode ? $examinerNode->nodeValue : '';
+    $studentName = $studentNode ? $studentNode->nodeValue : '';
+    $examDate = $dateNode ? $dateNode->nodeValue : '';
 
     // Check if the exam matches the search and filter criteria
     if ((empty($searchName) || stripos($examinerName, $searchName) !== false || stripos($studentName, $searchName) !== false) &&
@@ -25,6 +29,7 @@ foreach ($xml->getElementsByTagName('eksam') as $eksam) {
         $filteredXml->documentElement->appendChild($filteredXml->importNode($eksam, true));
     }
 }
+
 
 // Sort the filtered XML
 $xpath = new DOMXPath($filteredXml);
@@ -40,8 +45,11 @@ foreach ($nodes as $node) {
 
 // Custom sorting function
 usort($sortedArray, function ($a, $b) use ($sortColumn, $sortOrder) {
-    $aValue = $a->getElementsByTagName($sortColumn)->item(0)->nodeValue;
-    $bValue = $b->getElementsByTagName($sortColumn)->item(0)->nodeValue;
+    $aNode = $a->getElementsByTagName($sortColumn)->item(0);
+    $bNode = $b->getElementsByTagName($sortColumn)->item(0);
+
+    $aValue = $aNode ? $aNode->nodeValue : '';
+    $bValue = $bNode ? $bNode->nodeValue : '';
 
     if ($aValue == $bValue) {
         return 0; // Equal
@@ -53,6 +61,8 @@ usort($sortedArray, function ($a, $b) use ($sortColumn, $sortOrder) {
         return ($aValue > $bValue) ? -1 : 1; // Descending order
     }
 });
+
+
 
 // Append sorted nodes to the new XML document
 foreach ($sortedArray as $node) {
@@ -91,26 +101,20 @@ header('Content-Type: text/html; charset=UTF-8');
     </script>
 </head>
 <body>
-<h1>Exam Details</h1>
-
+<h1>Exam detailid</h1>
 <form method="POST">
-    <label for="name">Search by Name:</label>
-    <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($searchName); ?>" placeholder="Enter name...">
+    <label for="name">Otsi nime järgi:</label>
+    <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($searchName); ?>" placeholder="Sisestage nimi...">
 
-    <label for="date">Filter by Date:</label>
-    <input type="text" id="date" name="date" value="<?php echo htmlspecialchars($filterDate); ?>" placeholder="Select date...">
+    <label for="date">Filtreeri kuupäeva järgi:</label>
+    <input type="text" id="date" name="date" value="<?php echo htmlspecialchars($filterDate); ?>" placeholder="Valige kuupäev...">
 
-    <button type="submit">Search</button>
+    <button type="submit">Otsi</button>
 </form>
 
 <div>
     <table>
         <thead>
-        <tr>
-            <th><a href="?sort=eksamineerijanimi&order=<?php echo $sortOrder === 'asc' ? 'desc' : 'asc'; ?>">Examiner Name</a></th>
-            <th><a href="?sort=opilanenimi&order=<?php echo $sortOrder === 'asc' ? 'desc' : 'asc'; ?>">Student Name</a></th>
-            <th><a href="?sort=eksamiaeg&order=<?php echo $sortOrder === 'asc' ? 'desc' : 'asc'; ?>">Exam Date</a></th>
-        </tr>
         </thead>
         <tbody>
         <?php
@@ -118,7 +122,7 @@ header('Content-Type: text/html; charset=UTF-8');
         if ($html) {
             echo $html;
         } else {
-            echo "<p>No results found.</p>";
+            echo "<p>Tulemusi ei leitud.</p>";
         }
         ?>
         </tbody>
