@@ -1,55 +1,36 @@
 <?php
-function arrayToXml($data, &$xmlData, $rootElement = null) {
-    // Если указан корневой элемент, создаем его
-    if ($rootElement !== null) {
-        $xmlData->startElement($rootElement);
+
+function jsonToXml($json, $rootElement = 'root', $xml = null) {
+    // Decode the JSON string into a PHP array
+    $array = json_decode($json, true);
+
+    // Create a new XML element if not already created
+    if ($xml === null) {
+        $xml = new SimpleXMLElement("<$rootElement/>");
     }
 
-    // Проходим по массиву и добавляем элементы в XML
-    foreach ($data as $key => $value) {
+    // Iterate through the array and build the XML structure
+    foreach ($array as $key => $value) {
+        // If the key is numeric, we can use a generic name
+        if (is_numeric($key)) {
+            $key = 'item' . $key; // Change numeric keys to item0, item1, etc.
+        }
+
+        // If the value is an array, we need to recurse
         if (is_array($value)) {
-            // Если значение - это массив, рекурсивно вызываем функцию
-            $subnode = $xmlData->addChild($key);
-            arrayToXml($value, $subnode);
+            jsonToXml(json_encode($value), $key, $xml->addChild($key));
         } else {
-            // Иначе добавляем элемент с соответствующим значением
-            $xmlData->addChild($key, htmlspecialchars($value));
+            // Otherwise, just add the value as a child element
+            $xml->addChild($key, htmlspecialchars($value));
         }
     }
 
-    // Закрываем корневой элемент, если он был задан
-    if ($rootElement !== null) {
-        $xmlData->endElement();
-    }
+    return $xml->asXML();
 }
 
-// Путь к JSON файлу
-$jsonFile = 'eksamid.json'; // Укажите путь к вашему JSON файлу
-
-// Проверка существования файла JSON
-if (file_exists($jsonFile)) {
-    // Чтение JSON данных из файла
-    $jsonData = file_get_contents($jsonFile);
-
-    // Декодируем JSON в массив
-    $dataArray = json_decode($jsonData, true);
-
-    if ($dataArray !== null) {
-        // Создаем новый объект XML
-        $xmlData = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><eksamid></eksamid>');
-
-        // Преобразуем массив в XML
-        arrayToXml($dataArray, $xmlData);
-
-        // Сохранение XML в файл
-        $xmlData->asXML('output.xml'); // Укажите путь для сохранения XML файла
-
-        echo "XML genereeriti edukalt ja salvestati faili output.xml.";
-    } else {
-        echo "Viga: vale JSON-vorming.";
-    }
-} else {
-    echo "Viga: JSON-faili ei leitud.";
-}
-
+// Example usage
+$jsonData = '{"name": "John", "age": 30, "city": "New York", "hobbies": ["reading", "traveling"]}';
+$xmlData = jsonToXml($jsonData, 'person');
+header('Content-Type: application/xml');
+echo $xmlData;
 ?>
