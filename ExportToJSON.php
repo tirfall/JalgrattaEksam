@@ -1,10 +1,8 @@
 <?php
-// Загружаем XML из файла
-$xmlFile = 'XML/eksamid.xml'; // Замените на путь к вашему XML файлу
+$xmlFile = 'XML/eksamid.xml';
 $xml = new DOMDocument();
 $xml->load($xmlFile);
 
-// Конвертируем XML в массив
 function xmlToArray($xmlNode) {
     $result = [];
     if ($xmlNode->hasAttributes()) {
@@ -27,17 +25,22 @@ function xmlToArray($xmlNode) {
 
 $xmlArray = xmlToArray($xml->documentElement);
 
-// Конвертируем массив в JSON
 $jsonData = json_encode($xmlArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
-// Сохраняем JSON в файл
 $jsonFile = 'eksamid.json';
 file_put_contents($jsonFile, $jsonData);
 
-// Добавляем имена в JSON
-$jsonContent = json_decode(file_get_contents($jsonFile), true);
-
-file_put_contents($jsonFile, json_encode($jsonContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-
-echo "JSON-faili loomine ja värskendamine õnnestus: $jsonFile";
+if (file_exists($jsonFile)) {
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/json');
+    header('Content-Disposition: attachment; filename="' . basename($jsonFile) . '"');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Length: ' . filesize($jsonFile));
+    readfile($jsonFile);
+    exit;
+} else {
+    echo "JSON-fail ei liednud.";
+}
 ?>

@@ -1,36 +1,67 @@
 <?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['jsonFile'])) {
+    if ($_FILES['jsonFile']['error'] === UPLOAD_ERR_OK) {
+        $jsonContent = file_get_contents($_FILES['jsonFile']['tmp_name']);
 
-function jsonToXml($json, $rootElement = 'root', $xml = null) {
-    // Decode the JSON string into a PHP array
-    $array = json_decode($json, true);
+        function jsonToFormattedXml($array, $rootElement = 'root', $level = 0) {
+            $indent = str_repeat("    ", $level);
+            $xml = $level === 0 ? "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<$rootElement>\n" : "";
 
-    // Create a new XML element if not already created
-    if ($xml === null) {
-        $xml = new SimpleXMLElement("<$rootElement/>");
-    }
+            foreach ($array as $key => $value) {
+                if (is_numeric($key)) {
+                    $key = 'item' . $key;
+                }
+                if (is_array($value)) {
+                    $xml .= "$indent    <$key>\n";
+                    $xml .= jsonToFormattedXml($value, $rootElement, $level + 1);
+                    $xml .= "$indent    </$key>\n";
+                } else {
+                    $xml .= "$indent    <$key>" . htmlspecialchars($value) . "</$key>\n";
+                }
+            }
 
-    // Iterate through the array and build the XML structure
-    foreach ($array as $key => $value) {
-        // If the key is numeric, we can use a generic name
-        if (is_numeric($key)) {
-            $key = 'item' . $key; // Change numeric keys to item0, item1, etc.
+            if ($level === 0) {
+                $xml .= "</$rootElement>\n";
+            }
+
+            return $xml;
         }
 
-        // If the value is an array, we need to recurse
-        if (is_array($value)) {
-            jsonToXml(json_encode($value), $key, $xml->addChild($key));
-        } else {
-            // Otherwise, just add the value as a child element
-            $xml->addChild($key, htmlspecialchars($value));
+        $arrayData = json_decode($jsonContent, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            echo "Kehtetu vorming JSON!";
+            exit;
         }
-    }
 
-    return $xml->asXML();
+        $xmlData = jsonToFormattedXml($arrayData);
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/xml');
+        header('Content-Disposition: attachment; filename="converted.xml"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        echo $xmlData;
+        exit;
+    } else {
+        echo "Faili allalaadimise viga!";
+    }
 }
-
-// Example usage
-$jsonData = '{"name": "John", "age": 30, "city": "New York", "hobbies": ["reading", "traveling"]}';
-$xmlData = jsonToXml($jsonData, 'person');
-header('Content-Type: application/xml');
-echo $xmlData;
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON to XML teisenda</title>
+</head>
+<body>
+<h1>Laadige XML-i teisendamiseks üles JSON-fail</h1>
+<form method="POST" enctype="multipart/form-data">
+    <label for="jsonFile">Valige JSON-fail:</label>
+    <input type="file" name="jsonFile" id="jsonFile" accept="application/json" required>
+    <button type="submit">Teisenda</button>
+</form>
+</body>
+</html>
